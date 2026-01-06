@@ -1,6 +1,4 @@
-# 🎵 Melody Insight Engine
-
-**Scalable backend service orchestrating autonomous agents for automated data analysis using FastAPI and Google Gemini.**
+# Melody AI Engine
 
 Melody Insight Engine is the core intelligence layer for the Melody AI platform. It implements a ReAct-pattern agentic workflow to ingest structured datasets, execute statistical reasoning, and generate actionable business insights via a high-performance RESTful API.
 
