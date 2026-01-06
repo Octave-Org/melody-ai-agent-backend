@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+matplotlib
+seaborn
+fastapi
+uvicorn
+python-multipart
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
