@@ -3,7 +3,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from pydantic import BaseModel
 import pandas as pd
 import io
-# Import the new function name
+import os # <--- Added this to read Render variables
 from brain import init_melody_agent
 
 app = FastAPI(title="Melody AI API")
@@ -14,15 +14,27 @@ active_agent = None
 class ChatRequest(BaseModel):
     question: str
 
+@app.get("/")
+def read_root():
+    return {"message": "Melody AI API is running! Go to /docs to test it."}
+
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...), api_key: str = Form(...)):
+async def upload_file(file: UploadFile = File(...), api_key: str = Form(None)): # <--- Changed to None (Optional)
     global active_agent
     try:
+        # 1. Determine which key to use
+        # If the user sent one, use it. Otherwise, look for the Render Environment Variable.
+        final_api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        
+        if not final_api_key:
+            return {"error": "No API key found. Please provide one or set GOOGLE_API_KEY on the server."}
+
+        # 2. Process the file
         content = await file.read()
         df = pd.read_csv(io.BytesIO(content))
         
-        # Initialize using the new safe function
-        active_agent = init_melody_agent(df, api_key)
+        # 3. Initialize Brain with the chosen key
+        active_agent = init_melody_agent(df, final_api_key)
         
         return {"status": "success", "rows_loaded": len(df), "message": "Brain is ready!"}
     except Exception as e:
