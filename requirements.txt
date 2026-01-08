@@ -4,6 +4,7 @@ numpy
 matplotlib
 seaborn
 fastapi
+openpyxl
 uvicorn
 python-multipart
 langchain
